@@ -15,12 +15,12 @@ max_star_diameter = 5
 num_stars = 3000
 
 # Define parameters for the galaxies
-num_galaxies = 100
-min_galaxy_diameter = 15
-max_galaxy_diameter = 40
+num_galaxies = 50
+min_galaxy_diameter = 40
+max_galaxy_diameter = 80
 
 # Define parameters for the shooting stars
-num_shooting_stars = 5
+num_shooting_stars = 2
 shooting_star_length = 100
 
 # Define colors for the stars (these are RGB tuples)
@@ -56,9 +56,9 @@ for _ in range(num_galaxies):
     y_pos = np.random.randint(0, height)
     galaxy_diameter = np.random.randint(min_galaxy_diameter, max_galaxy_diameter)
 
-    # Draw the galaxy as a faint, fuzzy point
+    # Draw the galaxy with a radial gradient
     for i in range(galaxy_diameter):
-        draw.ellipse([(x_pos - i/2, y_pos - i/2), (x_pos + i/2, y_pos + i/2)], fill=(255, 255, 255, 255 - i*5))
+        draw.ellipse([(x_pos - i, y_pos - i), (x_pos + i, y_pos + i)], outline=(255, 255, 255, max(0, 255 - i*3)))
 
 # Generate the shooting stars
 for _ in range(num_shooting_stars):
@@ -71,7 +71,7 @@ for _ in range(num_shooting_stars):
     for i in range(shooting_star_length):
         x_offset = int(i * np.cos(angle))
         y_offset = int(i * np.sin(angle))
-        draw.line([(x_pos + x_offset, y_pos + y_offset), (x_pos + x_offset + 1, y_pos + y_offset + 1)], fill=(255, 255, 255, 255 - i*2))
+        draw.line([(x_pos + x_offset, y_pos + y_offset), (x_pos + x_offset + 1, y_pos + y_offset + 1)], fill=(255, 255, 255, max(0, 255 - i*5)))
 
 # Save the image
 image.save("background.jpeg")
