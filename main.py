@@ -1,10 +1,8 @@
-from settings.settings import Settings
-from generators.space import Space
+from gui.gui import GUI
 
 def main():
-    settings = Settings()
-    space = Space(settings)
-    space.generate()
+    gui = GUI()
+    gui.run()
 
 if __name__ == "__main__":
     main()
