@@ -4,11 +4,19 @@ from logging.handlers import RotatingFileHandler
 
 
 class Logger:
-    def __init__(self):
+    def __init__(self, log_directory=None, log_file=None, log_level=logging.DEBUG):
         self.log_format = "%(asctime)s - %(levelname)s - %(message)s"
-        self.log_level = logging.DEBUG
-        self.log_directory = os.path.join(os.getcwd(), 'logs')
-        self.log_file = os.path.join(self.log_directory, 'app.log')
+        self.log_level = log_level
+
+        # Set the log directory and file paths
+        self.log_directory = log_directory or os.path.join(
+            os.path.expanduser('~'),
+            'AppData',
+            'Local',
+            'WPGenerator',
+            'logs'
+        )
+        self.log_file = log_file or os.path.join(self.log_directory, 'app.log')
 
     def configure_logging(self):
         # Create the log directory if it doesn't exist
