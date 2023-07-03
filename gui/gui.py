@@ -1,16 +1,17 @@
-# gui.py
 import tkinter as tk
 from tkinter import filedialog, StringVar
 from settings.settings import Settings
+from logger.logger import Logger
 from generators.space import Space
 import os
 
 class GUI:
-    def __init__(self):
+    def __init__(self, logger):
         self.root = tk.Tk()
         self.root.geometry('500x300')  # sets the window size
         self.root.title('WP Generator')  # sets the window title
         self.settings = Settings()
+        self.logger = logger
 
         self.width_var = StringVar(self.root, value=str(self.settings.width))
         self.height_var = StringVar(self.root, value=str(self.settings.height))
@@ -56,34 +57,39 @@ class GUI:
         self.output_text.config(state='disabled')
         self.root.update()
 
-        # Save the settings
-        self.settings.width = int(self.width_var.get())
-        self.settings.height = int(self.height_var.get())
-        self.settings.save_path = self.save_path_var.get()
-        self.settings.save_settings(self.settings.__dict__)
+        try:
+            # Save the settings
+            self.settings.width = int(self.width_var.get())
+            self.settings.height = int(self.height_var.get())
+            self.settings.save_path = self.save_path_var.get()
+            self.settings.save_settings(self.settings.__dict__)
 
-        # Create a Space instance
-        space_gen = Space(self.settings)
+            # Create a Space instance
+            space_gen = Space(self.logger, self.settings)
 
-        # Generate the image
-        image = space_gen.generate()
+            # Generate the image
+            image = space_gen.generate()
 
-        # Construct the absolute path for saving the image
-        img_path = os.path.join(self.settings.save_path, 'background.jpeg')
-        abs_img_path = os.path.abspath(img_path)
+            # Construct the absolute path for saving the image
+            img_path = os.path.join(self.settings.save_path, 'background.jpeg')
+            abs_img_path = os.path.abspath(img_path)
 
-        # Save the image
-        image.save(abs_img_path)
+            # Save the image
+            image.save(abs_img_path)
 
-        self.output_text.config(state='normal')
-        self.output_text.insert('end', f'Generation complete! Image saved at {img_path}\n')
-        self.output_text.config(state='disabled')
-        self.root.update()
+            self.output_text.config(state='normal')
+            self.output_text.insert('end', f'Generation complete! Image saved at {img_path}\n')
+            self.logger.log_info('Image generated and saved')
+        except Exception as e:
+            error_message = f"An error occurred while generating the image: {str(e)}"
+            self.logger.log_exception(error_message)
+            self.output_text.config(state='normal')
+            self.output_text.insert('end', f'Error occurred: {str(e)}\n')
+        finally:
+            self.output_text.config(state='disabled')
+            self.root.update()
 
     def run(self):
+        self.logger.log_info('Application started')
         self.root.mainloop()
-
-
-if __name__ == '__main__':
-    gui = GUI()
-    gui.run()
+        self.logger.log_info('Application finished')

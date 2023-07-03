@@ -1,8 +1,11 @@
 import json
 import os
+from logger.logger import Logger
+
 
 class Settings:
     def __init__(self):
+        self.logger = None
         self.appdata_path = os.path.join(os.path.expanduser('~'), 'AppData', 'Local', 'WPGenerator')
         os.makedirs(self.appdata_path, exist_ok=True)
         self.settings_file = os.path.join(self.appdata_path, 'settings.json')
@@ -31,16 +34,38 @@ class Settings:
         # Define the save path
         self.save_path = self.load_save_path()
 
+        # Initialize logging
+        self.initialize_logging()
+
     def load_save_path(self):
         default_save_path = self.appdata_path
         if os.path.exists(self.settings_file):
-            with open(self.settings_file, 'r') as f:
-                settings = json.load(f)
-                if "save_path" in settings:
-                    return settings["save_path"]
+            try:
+                with open(self.settings_file, 'r') as f:
+                    settings = json.load(f)
+                    if "save_path" in settings:
+                        return settings["save_path"]
+            except json.JSONDecodeError:
+                pass  # Handle the JSON decoding error here
+
         return default_save_path
 
     def save_settings(self, settings):
         abs_settings_file = os.path.abspath(self.settings_file)
+        settings_copy = settings.copy()
+        settings_copy.pop('logger', None)  # Remove the 'logger' attribute
         with open(abs_settings_file, 'w') as f:
-            json.dump(settings, f)
+            json.dump(settings_copy, f)
+    def initialize_logging(self):
+        log_dir = os.path.join(self.appdata_path, 'logs')
+        os.makedirs(log_dir, exist_ok=True)
+
+        log_file = os.path.join(log_dir, 'app.log')
+
+        logger = Logger()
+        logger.configure_logging()
+        logger.log_info('Application started')
+
+        # Add the logger instance to the settings
+        self.logger = logger
+        

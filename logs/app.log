@@ -1,0 +1,151 @@
+2023-07-03 15:40:57,398 - INFO - Application started
+2023-07-03 15:40:57,463 - INFO - Application started
+2023-07-03 15:40:57,463 - INFO - Application started
+2023-07-03 15:40:57,466 - INFO - Application started
+2023-07-03 15:40:57,466 - INFO - Application started
+2023-07-03 15:41:06,306 - ERROR - An error occurred while generating the image: Object of type Logger is not JSON serializable
+Traceback (most recent call last):
+  File "F:\Programming\Projects\backgrounds\basic starfield\wpgenerator\gui\gui.py", line 65, in generate
+    self.settings.save_settings(self.settings.__dict__)
+  File "F:\Programming\Projects\backgrounds\basic starfield\wpgenerator\settings\settings.py", line 52, in save_settings
+    json.dump(settings, f)
+  File "C:\Users\User412\AppData\Local\Programs\Python\Python311\Lib\json\__init__.py", line 179, in dump
+    for chunk in iterable:
+  File "C:\Users\User412\AppData\Local\Programs\Python\Python311\Lib\json\encoder.py", line 432, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "C:\Users\User412\AppData\Local\Programs\Python\Python311\Lib\json\encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "C:\Users\User412\AppData\Local\Programs\Python\Python311\Lib\json\encoder.py", line 439, in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+  File "C:\Users\User412\AppData\Local\Programs\Python\Python311\Lib\json\encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type Logger is not JSON serializable
+2023-07-03 15:41:06,306 - ERROR - An error occurred while generating the image: Object of type Logger is not JSON serializable
+Traceback (most recent call last):
+  File "F:\Programming\Projects\backgrounds\basic starfield\wpgenerator\gui\gui.py", line 65, in generate
+    self.settings.save_settings(self.settings.__dict__)
+  File "F:\Programming\Projects\backgrounds\basic starfield\wpgenerator\settings\settings.py", line 52, in save_settings
+    json.dump(settings, f)
+  File "C:\Users\User412\AppData\Local\Programs\Python\Python311\Lib\json\__init__.py", line 179, in dump
+    for chunk in iterable:
+  File "C:\Users\User412\AppData\Local\Programs\Python\Python311\Lib\json\encoder.py", line 432, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "C:\Users\User412\AppData\Local\Programs\Python\Python311\Lib\json\encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "C:\Users\User412\AppData\Local\Programs\Python\Python311\Lib\json\encoder.py", line 439, in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+  File "C:\Users\User412\AppData\Local\Programs\Python\Python311\Lib\json\encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type Logger is not JSON serializable
+2023-07-03 15:41:13,746 - INFO - Application finished
+2023-07-03 15:41:13,746 - INFO - Application finished
+2023-07-03 15:41:13,747 - INFO - Application finished
+2023-07-03 15:41:13,747 - INFO - Application finished
+2023-07-03 15:43:43,006 - INFO - Application started
+2023-07-03 15:43:43,069 - ERROR - An error occurred: Expecting value: line 1 column 12 (char 11)
+Traceback (most recent call last):
+  File "F:\Programming\Projects\backgrounds\basic starfield\wpgenerator\main.py", line 13, in main
+    gui = GUI(logger)
+          ^^^^^^^^^^^
+  File "F:\Programming\Projects\backgrounds\basic starfield\wpgenerator\gui\gui.py", line 13, in __init__
+    self.settings = Settings()
+                    ^^^^^^^^^^
+  File "F:\Programming\Projects\backgrounds\basic starfield\wpgenerator\settings\settings.py", line 35, in __init__
+    self.save_path = self.load_save_path()
+                     ^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Programming\Projects\backgrounds\basic starfield\wpgenerator\settings\settings.py", line 44, in load_save_path
+    settings = json.load(f)
+               ^^^^^^^^^^^^
+  File "C:\Users\User412\AppData\Local\Programs\Python\Python311\Lib\json\__init__.py", line 293, in load
+    return loads(fp.read(),
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\User412\AppData\Local\Programs\Python\Python311\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User412\AppData\Local\Programs\Python\Python311\Lib\json\decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User412\AppData\Local\Programs\Python\Python311\Lib\json\decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 12 (char 11)
+2023-07-03 15:43:43,071 - INFO - Application finished
+2023-07-03 15:46:03,679 - INFO - Application started
+2023-07-03 15:46:03,742 - INFO - Application started
+2023-07-03 15:46:03,742 - INFO - Application started
+2023-07-03 15:46:03,745 - INFO - Application started
+2023-07-03 15:46:03,745 - INFO - Application started
+2023-07-03 15:46:13,299 - ERROR - An error occurred while generating the image: Space.__init__() missing 1 required positional argument: 'settings'
+Traceback (most recent call last):
+  File "F:\Programming\Projects\backgrounds\basic starfield\wpgenerator\gui\gui.py", line 68, in generate
+    space_gen = Space(self.settings)
+                ^^^^^^^^^^^^^^^^^^^^
+TypeError: Space.__init__() missing 1 required positional argument: 'settings'
+2023-07-03 15:46:13,299 - ERROR - An error occurred while generating the image: Space.__init__() missing 1 required positional argument: 'settings'
+Traceback (most recent call last):
+  File "F:\Programming\Projects\backgrounds\basic starfield\wpgenerator\gui\gui.py", line 68, in generate
+    space_gen = Space(self.settings)
+                ^^^^^^^^^^^^^^^^^^^^
+TypeError: Space.__init__() missing 1 required positional argument: 'settings'
+2023-07-03 15:46:39,738 - INFO - Application finished
+2023-07-03 15:46:39,738 - INFO - Application finished
+2023-07-03 15:46:39,739 - INFO - Application finished
+2023-07-03 15:46:39,739 - INFO - Application finished
+2023-07-03 15:48:26,135 - INFO - Application started
+2023-07-03 15:48:26,200 - INFO - Application started
+2023-07-03 15:48:26,200 - INFO - Application started
+2023-07-03 15:48:26,204 - INFO - Application started
+2023-07-03 15:48:26,204 - INFO - Application started
+2023-07-03 15:48:33,204 - ERROR - An error occurred while generating the image: Space.__init__() missing 1 required positional argument: 'settings'
+Traceback (most recent call last):
+  File "F:\Programming\Projects\backgrounds\basic starfield\wpgenerator\gui\gui.py", line 68, in generate
+    space_gen = Space(self.settings)
+                ^^^^^^^^^^^^^^^^^^^^
+TypeError: Space.__init__() missing 1 required positional argument: 'settings'
+2023-07-03 15:48:33,204 - ERROR - An error occurred while generating the image: Space.__init__() missing 1 required positional argument: 'settings'
+Traceback (most recent call last):
+  File "F:\Programming\Projects\backgrounds\basic starfield\wpgenerator\gui\gui.py", line 68, in generate
+    space_gen = Space(self.settings)
+                ^^^^^^^^^^^^^^^^^^^^
+TypeError: Space.__init__() missing 1 required positional argument: 'settings'
+2023-07-03 15:48:37,120 - INFO - Application finished
+2023-07-03 15:48:37,120 - INFO - Application finished
+2023-07-03 15:48:37,122 - INFO - Application finished
+2023-07-03 15:48:37,122 - INFO - Application finished
+2023-07-03 15:49:41,659 - INFO - Application started
+2023-07-03 15:49:41,720 - INFO - Application started
+2023-07-03 15:49:41,720 - INFO - Application started
+2023-07-03 15:49:41,723 - INFO - Application started
+2023-07-03 15:49:41,723 - INFO - Application started
+2023-07-03 15:49:44,642 - ERROR - An error occurred while generating the image: Space.__init__() missing 1 required positional argument: 'settings'
+Traceback (most recent call last):
+  File "F:\Programming\Projects\backgrounds\basic starfield\wpgenerator\gui\gui.py", line 68, in generate
+    space_gen = Space(self.settings)
+                ^^^^^^^^^^^^^^^^^^^^
+TypeError: Space.__init__() missing 1 required positional argument: 'settings'
+2023-07-03 15:49:44,642 - ERROR - An error occurred while generating the image: Space.__init__() missing 1 required positional argument: 'settings'
+Traceback (most recent call last):
+  File "F:\Programming\Projects\backgrounds\basic starfield\wpgenerator\gui\gui.py", line 68, in generate
+    space_gen = Space(self.settings)
+                ^^^^^^^^^^^^^^^^^^^^
+TypeError: Space.__init__() missing 1 required positional argument: 'settings'
+2023-07-03 15:49:48,115 - INFO - Application finished
+2023-07-03 15:49:48,115 - INFO - Application finished
+2023-07-03 15:49:48,115 - INFO - Application finished
+2023-07-03 15:49:48,115 - INFO - Application finished
+2023-07-03 15:50:52,644 - INFO - Application started
+2023-07-03 15:50:52,707 - INFO - Application started
+2023-07-03 15:50:52,707 - INFO - Application started
+2023-07-03 15:50:52,710 - INFO - Application started
+2023-07-03 15:50:52,710 - INFO - Application started
+2023-07-03 15:50:54,724 - INFO - Generating space image...
+2023-07-03 15:50:54,724 - INFO - Generating space image...
+2023-07-03 15:50:54,785 - INFO - Space image generated successfully.
+2023-07-03 15:50:54,785 - INFO - Space image generated successfully.
+2023-07-03 15:50:54,811 - INFO - Image generated and saved
+2023-07-03 15:50:54,811 - INFO - Image generated and saved
+2023-07-03 15:51:00,014 - INFO - Application finished
+2023-07-03 15:51:00,014 - INFO - Application finished
+2023-07-03 15:51:00,015 - INFO - Application finished
+2023-07-03 15:51:00,015 - INFO - Application finished
