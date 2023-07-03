@@ -57,5 +57,8 @@ class Space:
                 y_offset = int(i * np.sin(angle))
                 draw.line([(x_pos + x_offset, y_pos + y_offset), (x_pos + x_offset + 1, y_pos + y_offset + 1)], fill=(255, 255, 255, max(0, 255 - i*5)))
 
-        # Save the image
+            # Save the image
         image.save("background.jpeg")
+
+        # Return the generated image
+        return image
