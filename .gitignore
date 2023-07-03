@@ -1,5 +1,8 @@
 # Ignore generated files and folders
 /dist/
 /build/
-/background.jpeg
-/main.spec
+/logs/
+.idea/
+/logger/__pycache__/
+background.jpeg
+main.spec
