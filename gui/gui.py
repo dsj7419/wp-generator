@@ -1,5 +1,6 @@
+# gui.py
 import tkinter as tk
-from tkinter import filedialog, messagebox, StringVar
+from tkinter import filedialog, StringVar
 from settings.settings import Settings
 from generators.space import Space
 import os
@@ -59,7 +60,7 @@ class GUI:
         self.settings.width = int(self.width_var.get())
         self.settings.height = int(self.height_var.get())
         self.settings.save_path = self.save_path_var.get()
-        self.settings.save_settings()
+        self.settings.save_settings(self.settings.__dict__)
 
         # Create a Space instance
         space_gen = Space(self.settings)
@@ -67,9 +68,12 @@ class GUI:
         # Generate the image
         image = space_gen.generate()
 
-        # Save the image
+        # Construct the absolute path for saving the image
         img_path = os.path.join(self.settings.save_path, 'background.jpeg')
-        image.save(img_path)
+        abs_img_path = os.path.abspath(img_path)
+
+        # Save the image
+        image.save(abs_img_path)
 
         self.output_text.config(state='normal')
         self.output_text.insert('end', f'Generation complete! Image saved at {img_path}\n')

@@ -1,0 +1,5 @@
+# Ignore generated files and folders
+/dist/
+/build/
+/background.jpeg
+/main.spec

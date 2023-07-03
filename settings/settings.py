@@ -40,7 +40,7 @@ class Settings:
                     return settings["save_path"]
         return default_save_path
 
-    def save_settings(self):
-        settings = {"save_path": self.save_path}
-        with open(self.settings_file, 'w') as f:
+    def save_settings(self, settings):
+        abs_settings_file = os.path.abspath(self.settings_file)
+        with open(abs_settings_file, 'w') as f:
             json.dump(settings, f)
