@@ -31,16 +31,16 @@ class Settings:
         # Define colors for the stars (these are RGB tuples)
         self.colors = [(255, 255, 255), (255, 240, 220), (255, 220, 180), (180, 220, 255)]
 
+        # Define parameters for Perlin noise
+        self.perlin_octaves = 16
+        self.perlin_persistence = 0.1
+        self.perlin_scale = 10
+
         # Define the save path
         self.save_path = self.load_save_path()
 
         # Initialize logging
         self.initialize_logging()
-
-        # Define parameters for Perlin noise
-        self.perlin_octaves = 16
-        self.perlin_persistence = 0.1
-        self.perlin_scale = 10
 
     def load_save_path(self):
         default_save_path = self.appdata_path
@@ -54,6 +54,13 @@ class Settings:
                             return save_path
             except json.JSONDecodeError:
                 pass  # Handle the JSON decoding error here
+
+        # Create a new settings file with default values
+        settings = {
+            "save_path": default_save_path,
+        }
+        with open(self.settings_file, 'w') as f:
+            json.dump(settings, f)
 
         return default_save_path
 
@@ -87,3 +94,40 @@ class Settings:
 
         # Add the logger instance to the settings
         self.logger = logger
+
+    # Methods for generator-specific settings
+
+    def save_space_settings(self, settings):
+        # Save Space generator settings to the settings file
+        abs_settings_file = os.path.abspath(self.settings_file)
+        with open(abs_settings_file, 'r') as f:
+            settings_data = json.load(f)
+
+        settings_data['space_settings'] = settings
+
+        with open(abs_settings_file, 'w') as f:
+            json.dump(settings_data, f)
+
+    def load_space_settings(self):
+        # Load Space generator settings from the settings file
+        abs_settings_file = os.path.abspath(self.settings_file)
+        with open(abs_settings_file, 'r') as f:
+            settings_data = json.load(f)
+
+        return settings_data.get('space_settings', {})
+
+    def enable_space_setting(self, setting_name):
+        # Enable Space generator setting
+        space_settings = self.load_space_settings()
+        space_settings[setting_name + "_enabled"] = True
+        self.save_space_settings(space_settings)
+
+    def disable_space_setting(self, setting_name):
+        # Disable Space generator setting
+        space_settings = self.load_space_settings()
+        space_settings[setting_name + "_enabled"] = False
+        self.save_space_settings(space_settings)
+
+    def is_space_setting_enabled(self, setting_name):
+        space_settings = self.load_space_settings()
+        return space_settings.get(setting_name + "_enabled", False)
