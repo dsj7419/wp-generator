@@ -1,147 +1,150 @@
-import tkinter as tk
-from tkinter import filedialog, StringVar
+import os
+from PyQt5.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QTextEdit,
+    QMessageBox,
+    QFileDialog,
+    QVBoxLayout,
+    QWidget,
+    QHBoxLayout,
+)
+from PyQt5.QtGui import QFont, QIcon, QPixmap
+from PyQt5.QtCore import Qt
 from settings.settings import Settings
 from logger.logger import Logger
 from generators.space import Space
 from settings.validators import validate_resolution, validate_save_path
-import os
 
 
-class GUI:
+class GUI(QMainWindow):
     def __init__(self, logger):
-        self.root = tk.Tk()
-        self.root.geometry('500x300')  # sets the window size
-        self.root.title('WP Generator')  # sets the window title
+        super().__init__()
+
+        self.setWindowTitle("WP Generator")
+        self.setWindowIcon(QIcon("assets/icon.png"))
         self.settings = Settings()
         self.logger = logger
 
-        self.width_var = StringVar(self.root, value=str(self.settings.width))
-        self.height_var = StringVar(self.root, value=str(self.settings.height))
-        self.save_path_var = StringVar(self.root, value=self.settings.save_path)
+        # Main Widget
+        main_widget = QWidget()
+        self.setCentralWidget(main_widget)
+        main_layout = QVBoxLayout()
+        main_widget.setLayout(main_layout)
 
-        self.create_widgets()
+        # Logo
+        logo_label = QLabel()
+        logo_label.setAlignment(Qt.AlignCenter)
+        pixmap = QPixmap("assets/logo.png")
+        logo_label.setPixmap(pixmap.scaled(200, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        main_layout.addWidget(logo_label)
 
-    def create_widgets(self):
+        # Title
+        title_label = QLabel("WP Generator")
+        title_label.setAlignment(Qt.AlignCenter)
+        title_font = QFont("Arial", 18, QFont.Bold)
+        title_label.setFont(title_font)
+        main_layout.addWidget(title_label)
+
         # Resolution settings
-        resolution_label = tk.Label(self.root, text='Resolution:')
-        resolution_label.grid(row=0, column=0)
+        resolution_label = QLabel("Resolution:")
+        main_layout.addWidget(resolution_label)
 
-        width_entry = tk.Entry(self.root, textvariable=self.width_var)
-        width_entry.grid(row=0, column=1)
+        resolution_layout = QHBoxLayout()
+        main_layout.addLayout(resolution_layout)
 
-        height_entry = tk.Entry(self.root, textvariable=self.height_var)
-        height_entry.grid(row=0, column=2)
+        self.width_line_edit = QLineEdit(str(self.settings.width))
+        self.width_line_edit.setFixedWidth(60)
+        resolution_layout.addWidget(self.width_line_edit)
+
+        x_label = QLabel("x")
+        x_label.setAlignment(Qt.AlignCenter)
+        x_label.setFixedWidth(20)
+        resolution_layout.addWidget(x_label)
+
+        self.height_line_edit = QLineEdit(str(self.settings.height))
+        self.height_line_edit.setFixedWidth(60)
+        resolution_layout.addWidget(self.height_line_edit)
 
         # Save path setting
-        save_path_label = tk.Label(self.root, text='Save path:')
-        save_path_label.grid(row=1, column=0)
+        save_path_label = QLabel("Save path:")
+        main_layout.addWidget(save_path_label)
 
-        save_path_entry = tk.Entry(self.root, textvariable=self.save_path_var)
-        save_path_entry.grid(row=1, column=1)
+        save_path_layout = QHBoxLayout()
+        main_layout.addLayout(save_path_layout)
 
-        browse_button = tk.Button(self.root, text='Browse', command=self.browse)
-        browse_button.grid(row=1, column=2)
+        self.save_path_line_edit = QLineEdit(self.settings.save_path)
+        save_path_layout.addWidget(self.save_path_line_edit)
+
+        browse_button = QPushButton("Browse")
+        browse_button.clicked.connect(self.browse)
+        save_path_layout.addWidget(browse_button)
 
         # Generate button
-        self.generate_button = tk.Button(self.root, text='Generate', command=self.generate, state='disabled')
-        self.generate_button.grid(row=2, column=0)
+        generate_button = QPushButton("Generate")
+        generate_button.setEnabled(False)
+        generate_button.clicked.connect(self.generate)
+        main_layout.addWidget(generate_button)
+        self.generate_button = generate_button
 
         # Output screen
-        self.output_text = tk.Text(self.root, state='disabled', width=60, height=10)
-        self.output_text.grid(row=3, column=0, columnspan=3)
+        self.output_text = QTextEdit()
+        self.output_text.setReadOnly(True)
+        main_layout.addWidget(self.output_text)
 
         # Set up input validation
-        validate_resolution_cmd = self.root.register(self.validate_resolution_callback)
-        width_entry.config(validate='key', validatecommand=(validate_resolution_cmd, '%P', '%s'))
-        height_entry.config(validate='key', validatecommand=(validate_resolution_cmd, '%P', '%s'))
-
-        validate_save_path_cmd = self.root.register(self.validate_save_path_callback)
-        save_path_entry.config(validate='key', validatecommand=(validate_save_path_cmd, '%P', '%s'))
+        self.width_line_edit.textChanged.connect(self.validate_input)
+        self.height_line_edit.textChanged.connect(self.validate_input)
+        self.save_path_line_edit.textChanged.connect(self.validate_input)
 
         # Validate initial values and enable Generate button if valid
-        is_resolution_valid = validate_resolution(self.width_var.get(), self.height_var.get())
-        is_save_path_valid = validate_save_path(self.save_path_var.get())
-
-        if is_resolution_valid and is_save_path_valid:
-            self.generate_button.config(state='normal')
+        self.validate_input()
 
     def browse(self):
-        self.save_path_var.set(filedialog.askdirectory())
+        save_path = QFileDialog.getExistingDirectory(self, "Select Save Path")
+        if save_path:
+            self.save_path_line_edit.setText(save_path)
 
     def generate(self):
-        self.output_text.config(state='normal')
-        self.output_text.insert('end', 'Generating...\n')
-        self.output_text.config(state='disabled')
-        self.root.update()
+        self.output_text.append("Generating...")
 
         try:
-            # Validate user input
-            width = self.width_var.get()
-            height = self.height_var.get()
-            save_path = self.save_path_var.get()
+            width = int(self.width_line_edit.text())
+            height = int(self.height_line_edit.text())
+            save_path = self.save_path_line_edit.text()
 
-            if not validate_resolution(width, height):
-                self.logger.log_warning('Invalid resolution entered')
-                self.output_text.config(state='normal')
-                self.output_text.insert('end', 'Invalid resolution entered\n')
-                self.output_text.config(state='disabled')
-                self.root.update()
-                return
-
-            if not validate_save_path(save_path):
-                self.logger.log_warning('Invalid save path entered')
-                self.output_text.config(state='normal')
-                self.output_text.insert('end', 'Invalid save path entered\n')
-                self.output_text.config(state='disabled')
-                self.root.update()
-                return
-
-            # Save the settings
-            self.settings.width = int(width)
-            self.settings.height = int(height)
+            self.settings.width = width
+            self.settings.height = height
             self.settings.save_path = save_path
             self.settings.save_settings(self.settings.__dict__)
 
-            # Create a Space instance
             space_gen = Space(self.logger, self.settings)
-
-            # Generate the image
             image = space_gen.generate()
 
-            # Construct the absolute path for saving the image
-            img_path = os.path.join(self.settings.save_path, 'background.jpeg')
+            img_path = os.path.join(save_path, "background.jpeg")
             abs_img_path = os.path.abspath(img_path)
-
-            # Save the image
             image.save(abs_img_path)
 
-            self.output_text.config(state='normal')
-            self.output_text.insert('end', f'Generation complete! Image saved at {img_path}\n')
-            self.logger.log_info('Image generated and saved')
+            self.output_text.append(f"Generation complete! Image saved at {img_path}")
+            self.logger.log_info("Image generated and saved")
         except Exception as e:
             error_message = f"An error occurred while generating the image: {str(e)}"
             self.logger.log_exception(error_message)
-            self.output_text.config(state='normal')
-            self.output_text.insert('end', f'Error occurred: {str(e)}\n')
-        finally:
-            self.output_text.config(state='disabled')
-            self.root.update()
+            self.output_text.append(f"Error occurred: {str(e)}")
 
-    def run(self):
-        self.logger.log_info('Application started')
-        self.root.mainloop()
-        self.logger.log_info('Application finished')
+    def validate_input(self):
+        width = self.width_line_edit.text()
+        height = self.height_line_edit.text()
+        save_path = self.save_path_line_edit.text()
 
-    def validate_resolution_callback(self, new_value, current_value):
-        if validate_resolution(new_value, self.height_var.get()):
-            self.generate_button.config(state='normal')
-        else:
-            self.generate_button.config(state='disabled')
-        return True
+        is_resolution_valid = validate_resolution(width, height)
+        is_save_path_valid = validate_save_path(save_path)
 
-    def validate_save_path_callback(self, new_value, current_value):
-        if validate_save_path(new_value):
-            self.generate_button.config(state='normal')
-        else:
-            self.generate_button.config(state='disabled')
-        return True
+        self.generate_button.setEnabled(is_resolution_valid and is_save_path_valid)
+
+    def closeEvent(self, event):
+        self.logger.log_info("Application finished")
+        event.accept()

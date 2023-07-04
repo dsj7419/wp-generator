@@ -1,3 +1,5 @@
+import sys
+from PyQt5.QtWidgets import QApplication
 from gui.gui import GUI
 from logger.logger import Logger
 
@@ -10,8 +12,10 @@ def main():
 
     try:
         # Run the GUI
+        app = QApplication(sys.argv)
         gui = GUI(logger)
-        gui.run()
+        gui.show()
+        sys.exit(app.exec_())
     except Exception as e:
         logger.log_exception('An error occurred: {}'.format(str(e)))
 
