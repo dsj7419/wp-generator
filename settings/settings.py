@@ -44,7 +44,9 @@ class Settings:
                 with open(self.settings_file, 'r') as f:
                     settings = json.load(f)
                     if "save_path" in settings:
-                        return settings["save_path"]
+                        save_path = settings["save_path"]
+                        if self.validate_save_path(save_path):
+                            return save_path
             except json.JSONDecodeError:
                 pass  # Handle the JSON decoding error here
 
@@ -56,6 +58,18 @@ class Settings:
         settings_copy.pop('logger', None)  # Remove the 'logger' attribute
         with open(abs_settings_file, 'w') as f:
             json.dump(settings_copy, f)
+
+    def validate_save_path(self, save_path):
+        # Validate the save path
+        if not os.path.isabs(save_path):
+            return False
+        if not os.path.exists(save_path):
+            try:
+                os.makedirs(save_path)
+            except Exception:
+                return False
+        return True
+
     def initialize_logging(self):
         log_dir = os.path.join(self.appdata_path, 'logs')
         os.makedirs(log_dir, exist_ok=True)
@@ -68,4 +82,3 @@ class Settings:
 
         # Add the logger instance to the settings
         self.logger = logger
-        
