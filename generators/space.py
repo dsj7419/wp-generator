@@ -1,6 +1,8 @@
 from PIL import Image, ImageDraw
 import numpy as np
+import noise
 from logger.logger import Logger
+
 
 class Space:
     def __init__(self, logger, settings):
@@ -65,9 +67,37 @@ class Space:
                     draw.line([(x_pos + x_offset, y_pos + y_offset), (x_pos + x_offset + 1, y_pos + y_offset + 1)],
                               fill=(255, 255, 255, max(0, 255 - i * 5)))
 
+            # Generate the space background using Perlin noise
+            noise_array = self.generate_perlin_noise()
+            self.draw_space_background(noise_array, draw)
+
             self.logger.log_info('Space image generated successfully.')
             return image
 
         except Exception as e:
             self.logger.log_error(f'Error occurred while generating space image: {str(e)}')
             raise
+
+    def generate_perlin_noise(self):
+        # Generate Perlin noise for the space background
+        noise_array = np.zeros((self.settings.width, self.settings.height))
+
+        for x in range(self.settings.width):
+            for y in range(self.settings.height):
+                noise_value = noise.snoise2(
+                    x / self.settings.perlin_scale,
+                    y / self.settings.perlin_scale,
+                    octaves=self.settings.perlin_octaves,
+                    persistence=self.settings.perlin_persistence
+                )
+                noise_array[x, y] = noise_value
+
+        return noise_array
+
+    def draw_space_background(self, noise_array, draw):
+        # Draw the space background using the Perlin noise
+        for x in range(self.settings.width):
+            for y in range(self.settings.height):
+                value = int((noise_array[x, y] + 1) * 127.5)
+                color = (value, value, value)
+                draw.point((x, y), fill=color)
